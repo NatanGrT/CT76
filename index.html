@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Le Grand Prix de Seb — Édition Spéciale 50 Ans</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,800;1,900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0b0d11;
+      --card-bg: rgba(22, 26, 34, 0.92);
+      --accent-red: #e10600;
+      --accent-aston: #006f62;
+      --accent-mercedes: #00d2be;
+      --text-main: #f4f4f6;
+      --text-muted: #9ca3af;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.55;
+      padding: 25px 22px 70px;
+      position: relative;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(225, 6, 0, 0.22), transparent 55%),
+        radial-gradient(circle at 10% 80%, rgba(0, 210, 190, 0.12), transparent 45%),
+        radial-gradient(circle at 90% 60%, rgba(0, 111, 98, 0.16), transparent 45%),
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 2px, transparent 2px, transparent 6px);
+    }
+
+    /* Vibreurs F1 rouge & blanc sur les bords de l'écran */
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: 10px;
+      z-index: 50;
+      background: repeating-linear-gradient(
+        to bottom,
+        #e10600 0px,
+        #e10600 28px,
+        #ffffff 28px,
+        #ffffff 56px
+      );
+      opacity: 0.85;
+      pointer-events: none;
+    }
+    body::before { left: 0; }
+    body::after { right: 0; }
+
+    /* Tracé de circuit F1 géant en arrière-plan */
+    .track-bg {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-8deg);
+      width: 130vw;
+      max-width: 1500px;
+      opacity: 0.07;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Conteneur global large */
+    .page-wrapper {
+      max-width: 1380px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* En-tête pleine largeur au-dessus des 3 colonnes */
+    header {
+      text-align: center;
+      padding: 34px 24px;
+      background: linear-gradient(145deg, rgba(30, 35, 46, 0.95), rgba(18, 21, 29, 0.98));
+      border-radius: 22px;
+      border-top: 4px solid var(--accent-red);
+      border-bottom: 4px solid var(--accent-red);
+      box-shadow: 0 20px 45px rgba(0,0,0,0.6);
+      margin-bottom: 26px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .checkered-strip {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background-image: linear-gradient(45deg, #fff 25%, transparent 25%), 
+                        linear-gradient(-45deg, #fff 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #fff 75%), 
+                        linear-gradient(-45deg, transparent 75%, #fff 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+      opacity: 0.25;
+    }
+
+    .badge-50 {
+      display: inline-block;
+      background: var(--accent-red);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      padding: 6px 16px;
+      border-radius: 50px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 15px rgba(225, 6, 0, 0.4);
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 900;
+      font-style: italic;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    header p {
+      color: var(--text-muted);
+      max-width: 620px;
+      margin: 0 auto;
+      font-size: 1rem;
+    }
+
+    /* Grille 3 colonnes : Gauche (Actu Champion) | Centre (Cagnotte) | Droite (Écuries) */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 300px minmax(440px, 1fr) 300px;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .side-column {
+      position: sticky;
+      top: 20px;
+    }
+
+    /* Cartes */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    }
+
+    .side-column .card {
+      padding: 20px;
+    }
+
+    h2 {
+      font-size: 1.18rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-style: italic;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .side-column h2 {
+      font-size: 1.02rem;
+    }
+
+    /* Jauge Centrale */
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .current-amount {
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .current-amount span {
+      color: var(--accent-red);
+    }
+
+    .goal-label {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    /* Barre de progression circuit + animations */
+    .progress-wrapper {
+      background: #090a0d;
+      height: 36px;
+      border-radius: 18px;
+      padding: 4px;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.14);
+      margin-bottom: 12px;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.85);
+      overflow: hidden;
+    }
+
+    /* Lignes de piste subtiles dans le fond de la barre */
+    .progress-wrapper::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      right: 12px;
+      height: 2px;
+      transform: translateY(-50%);
+      background: repeating-linear-gradient(
+        to right,
+        rgba(255,255,255,0.12) 0px,
+        rgba(255,255,255,0.12) 12px,
+        transparent 12px,
+        transparent 24px
+      );
+      z-index: 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #8b0000, var(--accent-red), #ff4d4d);
+      border-radius: 14px;
+      transition: width 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      overflow: hidden;
+      animation: barPulse 2.4s ease-in-out infinite;
+    }
+
+    /* Reflet de vitesse DRS qui traverse la barre en boucle */
+    .progress-bar::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -60%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.38),
+        transparent
+      );
+      transform: skewX(-25deg);
+      animation: drsShimmer 2.2s infinite;
+    }
+
+    /* Conteneur voiture + traînée aérodynamique */
+    .car-unit {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      margin-right: 4px;
+    }
+
+    .speed-lines {
+      display: inline-block;
+      width: 18px;
+      height: 10px;
+      margin-right: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255, 220, 120, 0.85));
+      border-radius: 4px;
+      filter: blur(1px);
+      animation: exhaustFlicker 0.35s infinite alternate;
+    }
+
+    .car-icon {
+      font-size: 1.5rem;
+      display: inline-block;
+      transform: scaleX(-1);
+      filter: drop-shadow(0 0 8px rgba(255,255,255,0.85));
+      animation: engineVibrate 0.25s infinite alternate;
+    }
+
+    @keyframes drsShimmer {
+      0% { left: -60%; }
+      100% { left: 130%; }
+    }
+
+    @keyframes barPulse {
+      0%, 100% { box-shadow: 0 0 12px rgba(225, 6, 0, 0.45); }
+      50% { box-shadow: 0 0 24px rgba(255, 77, 77, 0.85); }
+    }
+
+    @keyframes engineVibrate {
+      0% { transform: scaleX(-1) translateY(0px); }
+      100% { transform: scaleX(-1) translateY(-1.5px); }
+    }
+
+    @keyframes exhaustFlicker {
+      0% { opacity: 0.4; width: 12px; }
+      100% { opacity: 0.95; width: 22px; }
+    }
+
+    .update-info {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    /* Paliers cadeaux */
+    .milestones {
+      display: grid;
+      gap: 14px;
+    }
+
+    .milestone {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: transform 0.2s, border-color 0.3s;
+    }
+
+    .milestone:hover {
+      transform: translateX(4px);
+    }
+
+    .milestone.unlocked {
+      border-color: #2ecc71;
+      background: rgba(46, 204, 113, 0.09);
+    }
+
+    .milestone.aston {
+      border-left: 4px solid var(--accent-aston);
+    }
+
+    .milestone-icon {
+      font-size: 1.85rem;
+      background: rgba(255,255,255,0.06);
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .milestone-info { flex: 1; }
+
+    .milestone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+
+    .milestone-title {
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    .milestone-price {
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .milestone.unlocked .milestone-price {
+      background: #2ecc71;
+      color: #0b0d10;
+    }
+
+    .milestone-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    /* Panneau Latéral Gauche : Champion 2026 */
+    .champion-card {
+      background: linear-gradient(180deg, rgba(0, 210, 190, 0.14), rgba(15, 18, 25, 0.85));
+      border: 1px solid rgba(0, 210, 190, 0.35);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .champion-photo {
+      width: 100%;
+      height: 175px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .champion-details {
+      padding: 15px;
+    }
+
+    .champ-tag {
+      display: inline-block;
+      background: var(--accent-mercedes);
+      color: #090c10;
+      font-weight: 800;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    .champion-details h3 {
+      font-size: 1.1rem;
+      font-weight: 900;
+      font-style: italic;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .champion-details p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .news-item {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 10px;
+      margin-top: 10px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .news-item strong {
+      color: #fff;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* Panneau Latéral Droit : Écuries 2026 */
+    .teams-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .team-pill {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-left-width: 4px;
+      border-radius: 8px;
+      padding: 7px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .team-name {
+      font-weight: 800;
+      font-size: 0.8rem;
+      color: #fff;
+    }
+
+    .team-drivers {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    /* Contribution PayPal */
+    .amount-presets {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .preset-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      padding: 12px 8px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .preset-btn:hover, .preset-btn.active {
+      background: var(--accent-red);
+      border-color: var(--accent-red);
+      transform: translateY(-2px);
+    }
+
+    .paypal-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: #0070ba;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 1.08rem;
+      padding: 16px 24px;
+      border-radius: 12px;
+      transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 6px 20px rgba(0, 112, 186, 0.35);
+    }
+
+    .paypal-btn:hover {
+      background: #005ea6;
+      transform: translateY(-2px);
+    }
+
+    .note-box {
+      margin-top: 14px;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Responsive Tablette & Mobile : repasse en 1 colonne proprement */
+    @media (max-width: 1120px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+        max-width: 760px;
+        margin: 0 auto;
+      }
+      .center-column { order: 1; }
+      .left-column { order: 2; position: static; }
+      .right-column { order: 3; position: static; }
+      .champion-photo { height: 220px; }
+    }
+
+    @media (max-width: 520px) {
+      .amount-presets { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Tracé SVG de circuit en arrière-plan -->
+<svg class="track-bg" viewBox="0 0 800 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M120 380 C80 380, 60 320, 110 270 L240 140 C280 100, 340 110, 360 160 L390 230 C410 270, 460 260, 480 210 L530 110 C560 60, 650 70, 690 130 C730 190, 710 280, 640 310 L510 350 C460 365, 450 410, 490 430 C530 450, 480 475, 410 465 L180 420 C150 415, 140 380, 120 380 Z" 
+        stroke="#ffffff" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M120 380 C80 380, 60 320, 110 270 L240 140 C280 100, 340 110, 360 160 L390 230 C410 270, 460 260, 480 210 L530 110 C560 60, 650 70, 690 130 C730 190, 710 280, 640 310 L510 350 C460 365, 450 410, 490 430 C530 450, 480 475, 410 465 L180 420 C150 415, 140 380, 120 380 Z" 
+        stroke="#e10600" stroke-width="4" stroke-dasharray="18 18"/>
+</svg>
+
+<div class="page-wrapper">
+  <header>
+    <div class="checkered-strip"></div>
+    <div class="badge-50">🏁 Édition Spéciale 50 Ans</div>
+    <h1>Le Grand Prix de Seb</h1>
+    <p>Pour fêter son demi-siècle comme il se doit, toute l'écurie se mobilise pour lui offrir une surprise de légende autour de la Formule 1 !</p>
+  </header>
+
+  <div class="main-grid">
+    
+    <!-- COLONNE GAUCHE : ACTU & CHAMPION DU MONDE -->
+    <aside class="side-column left-column">
+      <div class="card">
+        <h2>📰 Actu Paddock 2026</h2>
+        <div class="champion-card">
+          <img 
+            class="champion-photo" 
+            src="https://upload.wikimedia.org/wikipedia/commons/7/7b/2026_Chinese_GP_-_Mercedes_-_Kimi_Antonelli_-_Qualifying.jpg" 
+            alt="Kimi Antonelli au volant de la Mercedes W17 en 2026"
+          />
+          <div class="champion-details">
+            <span class="champ-tag">👑 Champion 2026</span>
+            <h3>Kimi Antonelli</h3>
+            <p>Sacré champion du monde à 20 ans avec la Mercedes W17 devant Ferrari et Red Bull !</p>
+            
+            <div class="news-item">
+              <strong>🔴 Duo de légende chez Ferrari</strong>
+              Lewis Hamilton et Charles Leclerc font vibrer la Scuderia cette saison.
+            </div>
+            <div class="news-item">
+              <strong>🆕 Nouvelles écuries 2026</strong>
+              Arrivée officielle d'Audi et Cadillac sur une grille passée à 11 équipes.
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- COLONNE CENTRALE : CAGNOTTE, OBJECTIFS & PAYPAL -->
+    <main class="center-column">
+      <!-- JAUGE DE LA CAGNOTTE -->
+      <div class="card">
+        <div class="stats-row">
+          <div>
+            <div class="goal-label">Cagnotte récoltée</div>
+            <div class="current-amount"><span id="montant-affiche">0</span> €</div>
+          </div>
+          <div class="goal-label" id="statut-objectif">Chargement des stands...</div>
+        </div>
+
+        <div class="progress-wrapper">
+          <div class="progress-bar" id="barre-progression">
+            <div class="car-unit">
+              <span class="speed-lines"></span>
+              <span class="car-icon">🏎️</span>
+            </div>
+          </div>
+        </div>
+        <div class="update-info">Dernière mise à jour : <span id="maj-date">-</span></div>
+      </div>
+
+      <!-- LES OBJECTIFS / PALIERS -->
+      <div class="card">
+        <h2>🏆 Les Objectifs du Paddock</h2>
+        <div class="milestones" id="liste-objectifs">
+          <!-- Généré automatiquement -->
+        </div>
+      </div>
+
+      <!-- PARTICIPER VIA PAYPAL -->
+      <div class="card">
+        <h2>🎟️ Participer au Grand Prix de Seb</h2>
+        <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 16px;">
+          Choisissez un montant rapide (ou entrez le montant libre directement sur PayPal) :
+        </p>
+
+        <div class="amount-presets">
+          <button class="preset-btn" onclick="choisirMontant(20, this)">20 €</button>
+          <button class="preset-btn active" onclick="choisirMontant(50, this)">50 €</button>
+          <button class="preset-btn" onclick="choisirMontant(80, this)">80 €</button>
+          <button class="preset-btn" onclick="choisirMontant(0, this)">Autre</button>
+        </div>
+
+        <a id="lien-paypal" href="https://paypal.me/VotrePseudoPayPal/50" target="_blank" rel="noopener" class="paypal-btn">
+          Participer via PayPal (<span id="btn-montant-texte">50 €</span>)
+        </a>
+
+        <div class="note-box">
+          💡 Astuce : sur PayPal, choisissez <strong>« Envoyer à un proche »</strong> pour qu'il n'y ait aucun frais sur le cadeau de Seb ! La jauge est actualisée juste après votre don.
+        </div>
+      </div>
+    </main>
+
+    <!-- COLONNE DROITE : LES 11 ÉCURIES ACTUELLES -->
+    <aside class="side-column right-column">
+      <div class="card">
+        <h2>🏎️ Grille F1 2026</h2>
+        <div class="teams-list">
+          <div class="team-pill" style="border-left-color: #00d2be;">
+            <span class="team-name">1. Mercedes</span>
+            <span class="team-drivers">Antonelli • Russell</span>
+          </div>
+          <div class="team-pill" style="border-left-color: #e10600;">
+            <span class="team-name">2. Ferrari</span>
+            <span class="team-drivers">Hamilton • Leclerc</span>
+          </div>
+          <div class="team-pill" style="border-left-color: #3671c6;">
+            <span class="team-name">3. Red Bull</span>
+            <span class="team-drivers">Verstappen • Hadjar</span>
+          </div>
+          <div class="team-pill" style="border-left-color: #ff8000;">
+            <span class="team-name">4. McLaren</span>
+            <span class="team-drivers">Norris • Piastri</span>
+          </div>
+          <div class="team-pill" style="border-left-color: #6692ff;">
+            <span class="team-name">5. Racing Bulls</span>
+            <span class="team-drivers">Lawson • Lindblad</span>
+          </div>
+          <div class="team-pill" style="border-left-color: #ff87bc;">
+            <span class="team-name">6. Alpine</span>
+            <span class="team-drivers">Gasly • Colapinto</span>
+          </div>
+          <div class="team-pill" style="border-left-color: #b6babd;">
+            <span class="team-name">7. Haas</span>
+            <span class="team-drivers">Bearman • Ocon</span>
+          </div>
+          <div class="team-pill" style="border-left-color: #f50537;">
+            <span class="team-name">8. Audi</span>
+            <span class="team-drivers">Bortoleto • Hülkenberg</span>
+          </div>
+          <div class="team-pill" style="border-left-color: #1868db;">
+            <span class="team-name">9. Williams</span>
+            <span class="team-drivers">Sainz • Albon</span>
+          </div>
+          <div class="team-pill" style="border-left-color: #006f62;">
+            <span class="team-name">10. Aston Martin</span>
+            <span class="team-drivers">Alonso • Stroll</span>
+          </div>
+          <div class="team-pill" style="border-left-color: #d4af37;">
+            <span class="team-name">11. Cadillac</span>
+            <span class="team-drivers">Bottas • Pérez</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<script>
+  // =========================================================================
+  // 1. CONFIGURATION : METTEZ VOTRE LIEN PAYPAL.ME ET VOS OBJECTIFS ICI
+  // =========================================================================
+  const LIEN_PAYPAL_BASE = "https://paypal.me/VotrePseudoPayPal"; // <-- REMPLACEZ ICI
+
+  const OBJECTIFS = [
+    {
+      titre: "Objectif 1 : L'Expérience Formule 1",
+      prix: 550,
+      icone: "🎟️",
+      description: "Le cadeau principal : son billet / expérience officielle Formule 1 pour vivre la course en vrai !",
+      style: ""
+    },
+    {
+      titre: "Bonus 2 : LEGO Technic F1 Aston Martin",
+      prix: 800,
+      icone: "🧱",
+      description: "S'il reste du budget : la superbe monoplace LEGO F1 Aston Martin à monter et exposer.",
+      style: "aston"
+    },
+    {
+      titre: "Bonus 3 : Équipement Paddock & Casquette",
+      prix: 1000,
+      icone: "🧢",
+      description: "La tenue officielle de supporter (casquette / polo d'écurie) pour compléter le tout !",
+      style: ""
+    }
+  ];
+
+  // =========================================================================
+  // 2. LOGIQUE DU SITE + COMPTEUR ANIMÉ
+  // =========================================================================
+  function choisirMontant(montant, element) {
+    document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+    element.classList.add('active');
+
+    const lienBtn = document.getElementById('lien-paypal');
+    const texteBtn = document.getElementById('btn-montant-texte');
+
+    if (montant > 0) {
+      lienBtn.href = `${LIEN_PAYPAL_BASE}/${montant}`;
+      texteBtn.textContent = `${montant} €`;
+    } else {
+      lienBtn.href = LIEN_PAYPAL_BASE;
+      texteBtn.textContent = "Montant libre";
+    }
+  }
+
+  function animerCompteur(element, cible, duree) {
+    const debut = performance.now();
+    function mettreAJour(maintenant) {
+      const progression = Math.min((maintenant - debut) / duree, 1);
+      const easeOut = 1 - Math.pow(1 - progression, 3);
+      element.textContent = Math.round(easeOut * cible);
+      if (progression < 1) {
+        requestAnimationFrame(mettreAJour);
+      }
+    }
+    requestAnimationFrame(mettreAJour);
+  }
+
+  async function chargerCagnotte() {
+    let montantActuel = 0;
+    let dateMaj = "Aujourd'hui";
+
+    try {
+      const reponse = await fetch('cagnotte.json?t=' + Date.now());
+      if (reponse.ok) {
+        const data = await reponse.json();
+        montantActuel = Number(data.montant) || 0;
+        dateMaj = data.derniere_maj || "Récemment";
+      }
+    } catch (e) {
+      console.log("Lecture locale ou fichier cagnotte.json non trouvé.");
+    }
+
+    animerCompteur(document.getElementById('montant-affiche'), montantActuel, 1600);
+    document.getElementById('maj-date').textContent = dateMaj;
+
+    const objectifMax = OBJECTIFS[OBJECTIFS.length - 1].prix;
+    const pourcentage = Math.min(100, Math.round((montantActuel / objectifMax) * 100));
+
+    setTimeout(() => {
+      document.getElementById('barre-progression').style.width = Math.max(9, pourcentage) + '%';
+    }, 200);
+
+    const statutEl = document.getElementById('statut-objectif');
+    if (montantActuel >= objectifMax) {
+      statutEl.textContent = "🎉 Tous les objectifs sont débloqués !";
+    } else {
+      const prochain = OBJECTIFS.find(obj => montantActuel < obj.prix);
+      const reste = prochain.prix - montantActuel;
+      statutEl.textContent = `Plus que ${reste} € pour débloquer le palier suivant`;
+    }
+
+    const conteneur = document.getElementById('liste-objectifs');
+    conteneur.innerHTML = OBJECTIFS.map(obj => {
+      const estDebloque = montantActuel >= obj.prix;
+      return `
+        <div class="milestone ${estDebloque ? 'unlocked' : ''} ${obj.style}">
+          <div class="milestone-icon">${estDebloque ? '✅' : obj.icone}</div>
+          <div class="milestone-info">
+            <div class="milestone-header">
+              <span class="milestone-title">${obj.titre}</span>
+              <span class="milestone-price">${estDebloque ? 'DÉBLOQUÉ (' + obj.prix + ' €)' : 'Palier : ' + obj.prix + ' €'}</span>
+            </div>
+            <div class="milestone-desc">${obj.description}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  choisirMontant(50, document.querySelector('.preset-btn.active'));
+  chargerCagnotte();
+</script>
+
+</body>
+</html>
